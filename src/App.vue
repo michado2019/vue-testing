@@ -1,67 +1,114 @@
-<template>
-  <div class="mainDiv">
-    <TestOne>
-    <h2>Your name is {{ name }}</h2>
-    <p>Your age is {{ age }}</p>
-  </TestOne>
-  <button @click='change'>Change</button>
+<template >
+  <div class="todosWrapper">
+    <h1>Todos</h1>
+    <div v-for="todo in todos" :key="todo.id" class="todosDiv">
+      <h2 :class="{todo : todo.isCompleted}">{{ todo.task }}</h2>
+      <div class="todosBtn-div">
+      <button @click="handleComplete(todo)">Complete</button>
+      <button @click="handleDelete(todo.id)">Delete</button>
+      </div>
+    </div>
+      <input type="text" placeholder="Add todo" v-model="todo" class="todoInput"/>
+      <button @click="addTodo" v-show="todo" class="addTodo-btn">Add todo</button>
   </div>
 </template>
 
 <script>
-import TestOne from "./components/TestOne.vue";
 
 export default {
   name: "App",
-  components: {
-    TestOne,
-  },
   data(){
     return{
-      name: 'Mike',
-      age: '32'
+      todo: '',
+      todos: [
+        {
+          id: 1,
+          task: 'Personal cleaning',
+          isCompleted: false
+        }
+      ],
     }
-  }, 
-  methods: {
-   change(){
-    this.name = 'Femi',
-    this.age = 30
+  },
+   watch: {
+    todos: {
+      handler(){
+         console.log('---->', this.todos)
+         localStorage.setItem('todos', JSON.stringify(this.todos))
+      },
+   deep: true
    }
   },
-  beforeCreate(){
-    console.log('before create called')
+  methods: {
+    addTodo(){
+      this.todos.push({
+        id: this.todos.length +1,
+        task: this.todo,
+        isCompleted: false,
+      })
+    },
+    handleComplete(todo){
+      todo.isCompleted = !todo.isCompleted
+    },
+    handleDelete(id){
+      this.todos = this.todos.filter((todo) => todo.id !== id)
+    },
   },
-  created(){
-    console.log('created called')
-  },
-  beforeMount(){
-    console.log('before mount called')
-  },
-  mounted(){
-    console.log('mounted called')
+    mounted(){
+    let todos = localStorage.getItem('todos')
+    let parsedTodos = JSON.parse(todos)
+    this.todos = parsedTodos
   }
 };
 </script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-.mainDiv{
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: center;
- background-color: #f3f3f3;
-}
-button{
-  background-color: rgb(3, 17, 51);
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  width: 100px;
-  height: 30px;
-}
+  .todosWrapper{
+    display: flex; 
+    margin: 0 auto;
+    width: 50%;
+    border-radius: 10px;
+    background-color: rgb(107, 17, 17);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .todosWrapper h1{
+    color: #042630;
+  }
+  .todosDiv{
+    display: flex;
+    align-items: center;
+  }
+  .todo{
+    text-decoration: line-through;
+    color: red;
+  }
+  .todoInput{
+    border: 1px solid #eee;
+    outline: none;
+    width: 310px;
+    padding: 10px 10px;
+    border-radius: 4px;
+    background-color: #eee;
+  }
+  .todosBtn-div{
+    margin-left: 20px;
+  }
+  .todosBtn-div button{
+    padding: 7px 20px;
+    background-color: black;
+    color: white;
+    margin-left: 20px;
+    border-radius: 5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .addTodo-btn{
+    padding: 10px 20px;
+    color: white;
+    background-color: #042630;
+    border-radius: 2px;
+    border: 0;
+    font-weight: 600;
+    margin: 3px;
+  }
 </style>

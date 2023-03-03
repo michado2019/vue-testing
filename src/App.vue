@@ -113,8 +113,6 @@ template{
 }
 .addTodo-btn {
   padding: 10px 20px;
-  color: white;
-  background-color: #042630;
   border-radius: 2px;
   border: 0;
   font-weight: 600;

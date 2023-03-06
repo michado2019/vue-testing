@@ -1,6 +1,6 @@
 <template>
   <div class="todosWrapper">
-    <h1>Todos</h1>
+    <TodosComponent />
     <div v-for="todo in todos" :key="todo.id" class="todosDiv">
       <h2 :class="{ todo: todo.isCompleted }">{{ todo.task }}</h2>
       <div class="todosBtn-div">
@@ -8,19 +8,16 @@
         <button @click="handleDelete(todo.id)">Delete</button>
       </div>
     </div>
-    <input
-      type="text"
-      placeholder="Add todo"
-      v-model="todo"
-      class="todoInput"
-    />
+    <input type="text" placeholder="Add todo" v-model="todo" class="todoInput" />
     <button @click="addTodo" :disabled="!todo" class="addTodo-btn">Add todo</button>
   </div>
 </template>
-
 <script>
+
+import TodosComponent from './components/TodosComponent.vue';
 export default {
   name: "App",
+  components: {TodosComponent},
   data() {
     return {
       todo: "",
